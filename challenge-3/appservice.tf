@@ -11,7 +11,7 @@ resource "azurerm_resource_group" "group" {
 
 
 locals {
-  team_id = "YOURTEAMID"
+  team_id = "84946"
 }
 
 ## An App Service Plan mainly defines the hardware that is used to host your App Service.
@@ -22,11 +22,11 @@ resource "azurerm_app_service_plan" "appserviceplan" {
   location            = azurerm_resource_group.group.location
   resource_group_name = azurerm_resource_group.group.name
   reserved = true # Leave this as it is mandatory for Linux plans
-
-  # Define Linux as Host OS
-
-  # Choose Standard Tier, Size = S1
-  
+  kind = "Linux"
+  sku {
+    tier = "Standard"
+    size = "S1"
+  }  
 }
 
 ## Azure App Service enables you to build and host web apps, mobile back ends, and RESTful APIs in the programming language of your choice without managing infrastructure. 
@@ -39,11 +39,11 @@ resource "azurerm_app_service" "app" {
   resource_group_name = azurerm_resource_group.group.name
 
   ## Uncomment The Line below !!!!! Link me with the plan by using the id of the item created above
-  ## app_service_plan_id = azurerm_app_service_plan.app...
+  app_service_plan_id = azurerm_app_service_plan.appserviceplan.id
 
   # Configure Docker Image mvandep3/htf:latest here
   site_config {
-    linux_fx_version = ""
+    linux_fx_version = "DOCKER|mvandep3/htf:latest"
   }
 
   # Configure your team ID above
