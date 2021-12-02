@@ -26,12 +26,14 @@ jobs:
           cd ./challenge-1
           npm install
           npm run build --if-present
-
+      - name: zip artifact for deployment
+        run: |
+          zip release.zip ./challenge-1 -r
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
         with:
           name: node-app
-          path: ./challenge-1
+          path: release.zip
 
   deploy:
     runs-on: ubuntu-latest
@@ -45,7 +47,8 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: node-app
-
+      - name: unzip artifact for deployment
+        run: unzip release.zip
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
@@ -53,4 +56,4 @@ jobs:
           app-name: 'fun-challenge-1'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_D927E537F7494A75913054F6E2960749 }}
-          package: ./challenge-1
+          package: .
