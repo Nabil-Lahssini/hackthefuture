@@ -28,7 +28,7 @@ jobs:
           npm run build --if-present
       - name: zip artifact for deployment
         run: |
-          zip release.zip ./challenge-1 -r
+          zip -q release.zip ./challenge-1 -r
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
         with:
@@ -56,4 +56,4 @@ jobs:
           app-name: 'fun-challenge-1'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_D927E537F7494A75913054F6E2960749 }}
-          package: .
+          package: ./challenge-1
